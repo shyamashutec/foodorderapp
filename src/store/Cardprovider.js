@@ -40,9 +40,10 @@ const Cartprovider = (props) => {
       items: updateditems,
       totalamount: cart.totalamount + item.price * item.amount,
     });
-    // console.log(cart);
   };
-
+  const clearcarthandler = () => {
+    setcart(defaultcart);
+  };
   const removeitemfromcarthandler = (item) => {
     // dispatchcart({ type: "remove", item: id });
 
@@ -72,6 +73,7 @@ const Cartprovider = (props) => {
     totalamount: cart.totalamount,
     additem: additemtocarthandler,
     removeitem: removeitemfromcarthandler,
+    clearcart: clearcarthandler,
   };
   return (
     <Cartcontext.Provider value={cartcontext}>

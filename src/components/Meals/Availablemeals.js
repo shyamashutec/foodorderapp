@@ -1,35 +1,34 @@
+import { useEffect, useState } from "react";
 import Card from "../UI/Card";
 import classes from "./Availablemeals.module.css";
 import Mealitem from "./MealItem/Mealitem";
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
 
 const Availablemeals = (props) => {
-  const meallist = DUMMY_MEALS.map((item) => {
+  const [isloading, setisloading] = useState(false);
+  const [meals, setmeals] = useState([]);
+  const [httperror, setiserror] = useState(false);
+  useEffect(() => {
+    async function fetchmeals() {
+      setisloading(true);
+
+      const response = await fetch(
+        "https://react-http-7ffca-default-rtdb.firebaseio.com/meals.json"
+      );
+      if (!response.ok) {
+        throw new Error();
+      }
+      const responsedata = await response.json();
+
+      setmeals(responsedata);
+      setisloading(false);
+    }
+
+    fetchmeals().catch((Error) => {
+      setisloading(false);
+      setiserror(true);
+    });
+  }, []);
+  const meallist = meals.map((item) => {
     return (
       <Mealitem
         key={item.id}
@@ -40,12 +39,19 @@ const Availablemeals = (props) => {
       />
     );
   });
-  return (
-    <section className={classes.meals}>
-      <Card>
-        <ul>{meallist}</ul>
-      </Card>
-    </section>
-  );
+  if (httperror) {
+    return <p>something wrong</p>;
+  }
+  if (isloading) {
+    return <p>loading</p>;
+  } else {
+    return (
+      <section className={classes.meals}>
+        <Card>
+          <ul>{meallist}</ul>
+        </Card>
+      </section>
+    );
+  }
 };
 export default Availablemeals;

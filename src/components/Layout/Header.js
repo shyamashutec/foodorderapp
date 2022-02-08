@@ -1,10 +1,14 @@
+import { useRef } from "react";
 import mealsimg from "../../assests/meals.jpg";
 import classes from "./Header.module.css";
 import HeaderCartbutton from "./HeaderCartbutton";
+
 const Header = (props) => {
+  const header = useRef();
+
   return (
     <>
-      <header className={classes.header}>
+      <header className={classes.header} ref={header}>
         <h1>React Meals</h1>
         <HeaderCartbutton onClick={props.onshowcart} />
       </header>
